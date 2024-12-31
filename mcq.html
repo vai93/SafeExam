@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compiler Design Test-1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="container">
+        <h1>Compiler Design Test-1</h1>
+        <p id="timer">Time Left: 10:00</p>
+        <div id="mcq-section" style="display: none;">
+            <div class="question">
+                <p>1. The output of lexical analyzer is</p>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="a"> A set of RE</label>
+                    <label><input type="radio" name="q1" value="b"> Syntax Tree</label>
+                    <label><input type="radio" name="q1" value="c"> Set of Tokens</label>
+                    <label><input type="radio" name="q1" value="d"> String Character</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>2. Which of the following are Lexemes?</p>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="a"> Identifiers</label>
+                    <label><input type="radio" name="q2" value="b"> Constants</label>
+                    <label><input type="radio" name="q2" value="c"> Keywords</label>
+                    <label><input type="radio" name="q2" value="d"> All of the mentioned</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>3. In a compiler, keywords of a language are recognized during</p>
+                <div class="options">
+                    <label><input type="radio" name="q3" value="a"> Parsing of the program</label>
+                    <label><input type="radio" name="q3" value="b"> The code generation</label>
+                    <label><input type="radio" name="q3" value="c"> The lexical analysis of the program</label>
+                    <label><input type="radio" name="q3" value="d"> Dataflow analysis</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>4. Two Important lexical categories are __________</p>
+                <div class="options">
+                    <label><input type="radio" name="q4" value="a"> White Space</label>
+                    <label><input type="radio" name="q4" value="b"> Comments</label>
+                    <label><input type="radio" name="q4" value="c"> None of the mentioned</label>
+                    <label><input type="radio" name="q4" value="d"> White Space & Comments</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>5. An individual token is called ________</p>
+                <div class="options">
+                    <label><input type="radio" name="q5" value="a"> Lexeme</label>
+                    <label><input type="radio" name="q5" value="b"> Lex</label>
+                    <label><input type="radio" name="q5" value="c"> Lexeme & Lex</label>
+                    <label><input type="radio" name="q5" value="d"> None of the mentioned</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>6. Which phase of the compiler is Lexical Analyzers?</p>
+                <div class="options">
+                    <label><input type="radio" name="q6" value="a"> First</label>
+                    <label><input type="radio" name="q6" value="b"> Second</label>
+                    <label><input type="radio" name="q6" value="c"> Third</label>
+                    <label><input type="radio" name="q6" value="d"> None of the mentioned</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>7. If r and s are two regular expressions with languages L(r) and L(s), then r|s is the regular expression denoting which language?</p>
+                <div class="options">
+                    <label><input type="radio" name="q7" value="a"> L(r) U L(s)</label>
+                    <label><input type="radio" name="q7" value="b"> L(r) ∩L(s)</label>
+                    <label><input type="radio" name="q7" value="c"> L(r)</label>
+                    <label><input type="radio" name="q7" value="d"> None</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>8. When a compiler corrects errors like “then” to “tehn” then it is an example of recovery in</p>
+                <div class="options">
+                    <label><input type="radio" name="q8" value="a"> Replace Character</label>
+                    <label><input type="radio" name="q8" value="b"> Delete character</label>
+                    <label><input type="radio" name="q8" value="c"> Transpose Character</label>
+                    <label><input type="radio" name="q8" value="d"> Missing Character</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>9. The regular expression: 0*10*10*10* is the representation of which following language over the alphabet {0,1}?</p>
+                <div class="options">
+                    <label><input type="radio" name="q9" value="a"> All binary strings possessing exactly three 1’s.</label>
+                    <label><input type="radio" name="q9" value="b"> All binary strings possessing more than three 1’s.</label>
+                    <label><input type="radio" name="q9" value="c"> All binary strings possessing less than three 1’s.</label>
+                    <label><input type="radio" name="q9" value="d"> None of the above.</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>10. Under which of the following operation, NFA is not closed?</p>
+                <div class="options">
+                    <label><input type="radio" name="q10" value="a"> Negation</label>
+                    <label><input type="radio" name="q10" value="b"> Kleene</label>
+                    <label><input type="radio" name="q10" value="c"> Concatenation</label>
+                    <label><input type="radio" name="q10" value="d"> None of the mentioned</label>
+                </div>
+            </div>
+
+            <button id="submit-button">Submit</button>
+        </div>
+        <button id="start-button">Start</button>
+    </div>
+
+    <script>
+        const startButton = document.getElementById('start-button');
+        const submitButton = document.getElementById('submit-button');
+        const mcqSection = document.getElementById('mcq-section');
+        const timerDisplay = document.getElementById('timer');
+        let timer;
+        let timeLeft = 600; // 5 minutes
+
+        function updateTimer() {
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                alert('Time is up! Test is being submitted.');
+                submitTest();
+            } else {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `Time Left: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+            }
+        }
+
+        function submitTest() {
+            // Here you can handle form submission logic
+            alert('Test submitted successfully!');
+            location.reload(); // Reload to reset the test
+        }
+
+        function forceFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Error enabling fullscreen: ${err.message}`);
+                });
+            }
+        }
+
+        function preventActions(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            alert('Action is disabled during the test.');
+        }
+
+        startButton.addEventListener('click', () => {
+            startButton.style.display = 'none';
+            mcqSection.style.display = 'block';
+            submitButton.style.display = 'block';
+
+            timer = setInterval(updateTimer, 1000);
+            forceFullscreen();
+
+            window.addEventListener('blur', () => {
+                alert('Tab or window switching is not allowed.');
+            });
+
+            document.addEventListener('contextmenu', preventActions);
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey || e.key === 'F12' || e.key === 'Tab') preventActions(e);
+            });
+        });
+
+        submitButton.addEventListener('click', submitTest);
+    </script>
+</body>
+</html>
