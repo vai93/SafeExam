@@ -137,9 +137,20 @@
 .theme-blue .title {
     color: rgb(30, 58, 138);
 }
-
-
-
+.fcontent{
+    font-size: 14px;
+  } 
+@media (max-width: 992px) {
+    .fcontent{
+        font-size: 9px;
+    }
+    /* @media (max-width: 768px) {
+        footer .fcontent {
+            display: block;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    } */
 /* Focus States - Matches shadcn/ui focus ring */
 .button:focus-visible {
     outline: 2px solid transparent;
