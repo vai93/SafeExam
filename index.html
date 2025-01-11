@@ -57,52 +57,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
     <footer style="background: linear-gradient(180deg, rgb(240, 247, 255) 0%, rgb(255, 255, 255) 100%); color: #333; margin-top: 100px; padding: 20px 0;">
         <div style="display: flex; justify-content: space-between; align-items: center;margin-top:50px;padding-top:50px; padding: 0 20px;">
-            <p>© 2025 NUV Group, All rights reserved.</p>
-            <p style="text-align: right;">Designed & Developed By Vaibhavi Patel</p>
+            <p class="fcontent">© 2025 NUV Group, All rights reserved.</p>
+            <p class="fcontent"style="text-align: right;">Designed & Developed By Vaibhavi Patel</p>
         </div>
     </footer>
     
 
-<script type="module">
-    import { setDoc, doc,getDoc ,collection } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
-    import { db } from "./firebase.js";
-    document.getElementById('quizForm').addEventListener('submit', async (e) => {
-            e.preventDefault(); // Prevent default form submission
-            const rollNumber = document.getElementById('rollNumber').value.trim();
-            sessionStorage.setItem('rollNumber', rollNumber);
-            const uniqueKey = String(document.getElementById('uniqueKey').value.trim());
-            try {
-                const studentDoc = doc(db, 'StudentDetails', rollNumber);
-                const docSnap = await getDoc(studentDoc);
-
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    console.log(data.uniqueKey);
-                    console.log(data);
-                    if (String(data.uniqueKey) === uniqueKey) {
-                        alert('Validation successful! Starting quiz.');
-                        window.location.href = 'mcq.html'; // Redirect to quiz
-                    } else {
-                        alert('Invalid unique key. Please try again.');
-                    }
-                } else {
-                    alert('Roll number not found. Please enter a valid roll number.');
-                }
-            } catch (error) {
-                console.error('Error validating student:', error);
-                alert('An error occurred during validation. Please try again later.');
-            }
-        });
-    // function validateRollNumber() {
-    //     rollNumber=parseInt(document.getElementById("rollNumber").value);
-    //     allowedRollNumbers = [1, 8, 9, 10, 15,2,3,4,5,6,7,11,12,13,14];
-    //     if (allowedRollNumbers.includes(rollNumber)) {
-    //         return true; 
-    //     }
-    //     alert("Invalid roll number. Please enter a valid roll number.");
-    //     return false; 
-        
-    // }
-</script>
+<script type="module"src="validation.js"></script>
 </body>
 </html>
