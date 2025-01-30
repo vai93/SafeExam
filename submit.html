@@ -62,9 +62,12 @@
         </div>
     </footer>
     <script>
+        // Push a new state to history to prevent back navigation
         history.pushState(null, null, location.href);
         history.pushState(null, null, location.href);
         history.pushState(null, null, location.href);
+
+        // Listen for the 'popstate' event, which is triggered when the user tries to go back
         window.onpopstate = function () {
             history.pushState(null, null, location.href);
         };
