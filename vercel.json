@@ -1,9 +1,0 @@
-{
-  "build": {
-    "env": {
-      "FIREBASE_API_KEY": "AIzaSyB44lalCeugu5WDRCXS3kwsRYvAIvAS0qs",
-      "FIREBASE_AUTH_DOMAIN": "safeexam-6b2bd.firebaseapp.com",
-      "FIREBASE_PROJECT_ID":"safeexam-6b2bd"
-    }
-  }
-}
