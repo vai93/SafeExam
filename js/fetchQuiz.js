@@ -1,10 +1,8 @@
 import { db } from "./firebase.js";
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
-
-const startButton = document.getElementById("start-button");
+const timerDisplay = document.getElementById("timer");
 const submitButton = document.getElementById("submit-button");
 const mcqSection = document.getElementById("mcq-section");
-const timerDisplay = document.getElementById("timer");
 let timer;
 let timeLeft = 300;
 
@@ -40,6 +38,8 @@ if (rollNumber) {
 }
 
 async function fetchQuestions() {
+    mcqSection.style.display = "block";  // Ensure section is visible
+    mcqSection.innerHTML = "";  // Clear previous questions
     const loader = document.getElementById("loader");
     const spinner = document.getElementById("spinner");
     loader.style.display = "block";
@@ -73,6 +73,7 @@ function shuffleQuestions(questions) {
 
 function generateForm(questions) {
     questions.forEach((question) => {
+      
         const questionDiv = document.createElement("div");
         questionDiv.classList.add("question");
 
@@ -139,6 +140,9 @@ function forceFullscreen() {
         });
     }
 }
+document.addEventListener("DOMContentLoaded", function () {
+    const startButton = document.getElementById("start-button");
+
 
 startButton.addEventListener("click", () => {
     startButton.style.display = "none";
@@ -154,7 +158,7 @@ startButton.addEventListener("click", () => {
             showToast("Fullscreen mode is required! Your test has been submitted.");
         }
     });
-});
+});});
 
 window.addEventListener("beforeunload", async () => {
     submitTest();
@@ -168,14 +172,22 @@ window.addEventListener("popstate", function () {
 });
 
 // Disable keyboard shortcuts for navigation (Windows & Mac)
+let warningCount = 0; // Track the number of violations
+const maxWarnings = 1; // Allow one warning before submission
+
 document.addEventListener("keydown", function (e) {
-    // Windows: ALT + Left Arrow (Back), ALT + Right Arrow (Forward)
-    if ((e.key === "ArrowLeft" || e.key === "ArrowRight") && e.altKey) e.preventDefault();
+    if (e.key === "Meta" || e.key === "Win") {
+        console.warn("Windows/Command key pressed! Auto-submitting test...");
+        submitTest();
+        showToast("Pressing Windows/Command key is not allowed! Your test has been submitted.");
+    }
 
-    // Mac: CMD + Left Arrow (Back), CMD + Right Arrow (Forward)
-    if ((e.key === "ArrowLeft" || e.key === "ArrowRight") && e.metaKey) e.preventDefault();
+    if ((e.altKey && e.key === "Tab") || (e.ctrlKey && e.key === "Tab")) {
+        console.warn("Alt+Tab or Ctrl+Tab detected! Auto-submitting test...");
+        submitTest();
+        showToast("Task switching is not allowed! Your test has been submitted.");
+    }
 
-    // Disable Backspace for navigation (except in input fields)
     if (e.key === "Backspace") {
         let target = e.target.tagName.toLowerCase();
         if (target !== "input" && target !== "textarea") {
@@ -183,10 +195,25 @@ document.addEventListener("keydown", function (e) {
         }
     }
 });
+function handleViolation(message) {
+    warningCount++;
+
+    if (warningCount > maxWarnings) {
+        console.warn(`${message} Test is being submitted.`);
+        submitTest();
+        showToast(`${message} Your test has been submitted.`);
+    } else {
+        console.warn(`${message} Warning ${warningCount} of ${maxWarnings}.`);
+        showToast(`${message} If this happens again, your test will be submitted.`);
+    }
+}
+
 
 // Prevent touch gestures for back/forward navigation
 window.addEventListener("touchstart", function (e) {
-    e.preventDefault(); // Stops swipe gestures on mobile browsers
+    if (!e.target.closest("#start-button")) { 
+        e.preventDefault();
+    } // Stops swipe gestures on mobile browsers
 }, { passive: false });
 
 // Prevent mouse back/forward button navigation
@@ -203,7 +230,7 @@ document.addEventListener("visibilitychange", async () => {
     const timeElapsed = performance.now() - lastActiveTime;
 
     if (document.hidden) {
-        console.log("Page hidden. Submitting test...");
+        console.log("Page hidden.");
 
         // If time gap is too large, assume system sleep happened (e.g., > 10 sec)
         if (timeElapsed > 10000) {
