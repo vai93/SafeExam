@@ -43,7 +43,7 @@ quizForm.addEventListener("submit", async (e) => {
     });
     localStorage.setItem("quizScore", score);
     try {
-        const studentDocRef = doc(db, "StudentDetails2022", rollNumber);
+        const studentDocRef = doc(db, "StudentDetails2022A1", rollNumber);
         const studentDoc = await getDoc(studentDocRef);
         if (!studentDoc.exists()) {
             throw new Error("Student not found");
