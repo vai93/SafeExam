@@ -171,9 +171,7 @@ window.addEventListener("popstate", function () {
     submitTest();
 });
 
-// Disable keyboard shortcuts for navigation (Windows & Mac)
-let warningCount = 0; // Track the number of violations
-const maxWarnings = 1; // Allow one warning before submission
+
 
 document.addEventListener("keydown", function (e) {
     if (e.key === "Meta" || e.key === "Win") {
@@ -195,26 +193,28 @@ document.addEventListener("keydown", function (e) {
         }
     }
 });
-function handleViolation(message) {
-    warningCount++;
-
-    if (warningCount > maxWarnings) {
-        console.warn(`${message} Test is being submitted.`);
-        submitTest();
-        showToast(`${message} Your test has been submitted.`);
-    } else {
-        console.warn(`${message} Warning ${warningCount} of ${maxWarnings}.`);
-        showToast(`${message} If this happens again, your test will be submitted.`);
-    }
-}
 
 
-// Prevent touch gestures for back/forward navigation
+let touchStartX = 0;
+let touchStartY = 0;
+
 window.addEventListener("touchstart", function (e) {
-    if (!e.target.closest("#start-button")) { 
-        e.preventDefault();
-    } // Stops swipe gestures on mobile browsers
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+window.addEventListener("touchmove", function (e) {
+    let touchEndX = e.touches[0].clientX;
+    let touchEndY = e.touches[0].clientY;
+
+    let deltaX = touchEndX - touchStartX;
+    let deltaY = touchEndY - touchStartY;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+        e.preventDefault(); 
+    }
 }, { passive: false });
+
 
 // Prevent mouse back/forward button navigation
 window.addEventListener("mousedown", function (e) {
