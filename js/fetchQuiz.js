@@ -16,6 +16,7 @@ function showToast(message) {
 }
 
 async function checkResponseInDatabase(rollNumber) {
+    console.log(sessionStorage.getItem("violation"));
     try {
         const querySnapshot = await getDocs(collection(db, "StudentResponses"));
         let responseFound = false;
@@ -136,6 +137,7 @@ function forceFullscreen() {
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch((err) => {
             alert(`Error enabling fullscreen: ${err.message}`);
+            sessionStorage.setItem("violation", true);
             submitTest();
         });
     }
@@ -154,6 +156,7 @@ startButton.addEventListener("click", () => {
 
     document.addEventListener("fullscreenchange", () => {
         if (!document.fullscreenElement) {
+            sessionStorage.setItem("violation", true);
             submitTest();
             showToast("Fullscreen mode is required! Your test has been submitted.");
         }
@@ -161,6 +164,7 @@ startButton.addEventListener("click", () => {
 });});
 
 window.addEventListener("beforeunload", async () => {
+    sessionStorage.setItem("violation", true);
     submitTest();
 });
 
@@ -168,6 +172,7 @@ window.addEventListener("beforeunload", async () => {
 history.pushState(null, null, location.href);
 window.addEventListener("popstate", function () {
     history.pushState(null, null, location.href);
+    sessionStorage.setItem("violation", true);
     submitTest();
 });
 
@@ -176,12 +181,14 @@ window.addEventListener("popstate", function () {
 document.addEventListener("keydown", function (e) {
     if (e.key === "Meta" || e.key === "Win") {
         console.warn("Windows/Command key pressed! Auto-submitting test...");
+        sessionStorage.setItem("violation", true);
         submitTest();
         showToast("Pressing Windows/Command key is not allowed! Your test has been submitted.");
     }
 
     if ((e.altKey && e.key === "Tab") || (e.ctrlKey && e.key === "Tab")) {
         console.warn("Alt+Tab or Ctrl+Tab detected! Auto-submitting test...");
+        sessionStorage.setItem("violation", true);
         submitTest();
         showToast("Task switching is not allowed! Your test has been submitted.");
     }
@@ -189,6 +196,7 @@ document.addEventListener("keydown", function (e) {
     if (e.key === "Backspace") {
         let target = e.target.tagName.toLowerCase();
         if (target !== "input" && target !== "textarea") {
+            sessionStorage.setItem("violation", true);
             e.preventDefault();
         }
     }
@@ -220,6 +228,7 @@ window.addEventListener("touchmove", function (e) {
 window.addEventListener("mousedown", function (e) {
     if (e.button === 3 || e.button === 4) { // 3 = Back button, 4 = Forward button
         e.preventDefault();
+        sessionStorage.setItem("violation", true);
         submitTest();
     }
 });
@@ -237,7 +246,7 @@ document.addEventListener("visibilitychange", async () => {
             console.log("System likely went to sleep. Ignoring event.");
             return;
         }
-
+        sessionStorage.setItem("violation", true);
         submitTest();
     }
 

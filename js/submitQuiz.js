@@ -10,6 +10,7 @@ quizForm.addEventListener("submit", async (e) => {
     }
     quizSubmitted = true;
     const rollNumber = sessionStorage.getItem("rollNumber") || "No roll number found";
+    
     const now = new Date();
     const submittedAt = new Date();
     const formattedDate = `${now.getHours() < 10 ? "0" + now.getHours() : now.getHours()}:${now.getMinutes() < 10 ? "0" + now.getMinutes() : now.getMinutes()}_${now.getDate() < 10 ? "0" + now.getDate() : now.getDate()}-${
@@ -42,6 +43,8 @@ quizForm.addEventListener("submit", async (e) => {
         }
     });
     localStorage.setItem("quizScore", score);
+    const violation = sessionStorage.getItem("violation") || false;
+    sessionStorage.removeItem("violation");
     try {
         const studentDocRef = doc(db, "StudentDetails2022A1", rollNumber);
         const studentDoc = await getDoc(studentDocRef);
@@ -50,7 +53,7 @@ quizForm.addEventListener("submit", async (e) => {
         }
         const userId = studentDoc.data().userId;
         const customDocId = `${rollNumber}_${formattedDate}`;
-        await setDoc(doc(db, "StudentResponses", customDocId), { answers: answers, score: score, rollNumber: rollNumber, submittedAt: submittedAt }, { merge: false });
+        await setDoc(doc(db, "StudentResponses", customDocId), { answers: answers, score: score, rollNumber: rollNumber, submittedAt: submittedAt,violation:violation }, { merge: false });
         console.log("Quiz submitted successfully!");
         window.location.href = "submit.html";
     } catch (error) {

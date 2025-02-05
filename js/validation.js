@@ -4,6 +4,7 @@ document.getElementById("quizForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const rollNumber = document.getElementById("rollNumber").value.trim();
     sessionStorage.setItem("rollNumber", rollNumber);
+    sessionStorage.removeItem("violation");
     const uniqueKey = String(document.getElementById("uniqueKey").value.trim());
     try {
         const studentDoc = doc(db, "StudentDetails2022A1", rollNumber);
