@@ -11,6 +11,7 @@
 <body>
     <div id="container">
         <p id="rollnumber"></p>
+        <p id="email"></p>
         <h1>Compiler Design Test-1</h1>
         <div id="toast"></div>
         <p id="timer">Time Left: 5:00</p>
@@ -23,15 +24,7 @@
         </form>
         <button id="start-button">Start</button>
     </div>
-    <script>
-        const rollNumber = sessionStorage.getItem('rollNumber');
-        console.log('Roll number:', rollNumber);
-        if (rollNumber) {
-            document.getElementById('rollnumber').innerHTML = 'Roll Number: ' + rollNumber;
-        } else {
-            document.getElementById('rollnumber').innerHTML = 'No roll number found.';
-        }
-    </script>
+    <script type="module" src="js/violation.js"></script>
     <script type="module" src="js/firebase.js"></script> 
     <script type="module" src="js/fetchQuiz.js"></script>
     <script type="module" src="js/submitQuiz.js"></script>    
