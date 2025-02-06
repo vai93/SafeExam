@@ -4,19 +4,41 @@ const timerDisplay = document.getElementById("timer");
 const submitButton = document.getElementById("submit-button");
 const mcqSection = document.getElementById("mcq-section");
 let timer;
-let timeLeft = 300;
+let timeLeft = 65; //5min:5*60=300
+const rollNumber = sessionStorage.getItem('rollNumber');
+    if (rollNumber) {
+        document.getElementById('rollnumber').innerHTML = 'Roll Number: ' + rollNumber;
+    } else {
+        document.getElementById('rollnumber').innerHTML = 'No roll number found.';
+       }
 
-function showToast(message) {
-    const toast = document.getElementById("toast");
-    toast.textContent = message;
-    toast.style.display = "block";
-    setTimeout(() => {
-        toast.style.display = "none";
-    }, 50000);
+if (rollNumber) {
+    nameFind(rollNumber);
+    checkResponseInDatabase(rollNumber);
+}
+async function nameFind(rollNumber) {
+    try {
+        const querySnapshot = await getDocs(collection(db, "StudentDetails2022"));
+        let nameFound = false;
+
+        querySnapshot.forEach((doc) => {
+            let student = doc.data();
+            if (student.rollNumber === rollNumber) {
+                document.getElementById("email").innerHTML = "Email: " + student.email;
+                nameFound = true;
+            }
+        });
+
+        if (!nameFound) {
+            document.getElementById("email").innerHTML = "No email found.";
+        }
+    } catch (error) {
+        console.error("Error checking database:", error);
+        document.getElementById("name").innerHTML = "No Name found.";
+    }
 }
 
 async function checkResponseInDatabase(rollNumber) {
-    console.log(sessionStorage.getItem("violation"));
     try {
         const querySnapshot = await getDocs(collection(db, "StudentResponses"));
         let responseFound = false;
@@ -33,12 +55,8 @@ async function checkResponseInDatabase(rollNumber) {
     }
 }
 
-const rollNumber = sessionStorage.getItem("rollNumber");
-if (rollNumber) {
-    checkResponseInDatabase(rollNumber);
-}
-
 async function fetchQuestions() {
+    const mcqSection = document.getElementById("mcq-section");
     mcqSection.style.display = "block";  // Ensure section is visible
     mcqSection.innerHTML = "";  // Clear previous questions
     const loader = document.getElementById("loader");
@@ -100,11 +118,18 @@ function generateForm(questions) {
         mcqSection.appendChild(questionDiv);
     });
 }
-
+function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.style.display = "block";
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 50000);
+}
 function updateTimer() {
     if (timeLeft <= 0) {
         clearInterval(timer);
-        alert("Time is up! Test is being submitted.");
+        showToast("Time is up! Test is being submitted.");
         submitTest();
     } else {
         timeLeft--;
@@ -113,7 +138,7 @@ function updateTimer() {
         timerDisplay.textContent = `Time Left: ${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
 
         if (timeLeft === 60) {
-            blinkInterval = setInterval(() => {
+            let blinkInterval = setInterval(() => {
                 if (timerDisplay.style.color === "red") {
                     timerDisplay.style.color = "black";
                     timerDisplay.style.fontSize = "20px";
@@ -125,7 +150,6 @@ function updateTimer() {
         }
     }
 }
-
 function submitTest() {
     const form = document.getElementById("quizForm");
     if (form) {
@@ -133,18 +157,19 @@ function submitTest() {
     }
 }
 
-function forceFullscreen() {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch((err) => {
-            alert(`Error enabling fullscreen: ${err.message}`);
-            sessionStorage.setItem("violation", true);
-            submitTest();
-        });
-    }
-}
+
 document.addEventListener("DOMContentLoaded", function () {
     const startButton = document.getElementById("start-button");
 
+
+function forceFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch((err) => {
+                alert(`Error enabling fullscreen: ${err.message}`);
+                submitTest();
+            });
+        }
+}
 
 startButton.addEventListener("click", () => {
     startButton.style.display = "none";
@@ -158,108 +183,9 @@ startButton.addEventListener("click", () => {
 
     document.addEventListener("fullscreenchange", () => {
         if (!document.fullscreenElement) {
-            sessionStorage.setItem("violation", true);
             submitTest();
-            showToast("Fullscreen mode is required! Your test has been submitted.");
         }
     });
 });});
-document.addEventListener("webkitfullscreenchange", () => {
-    if (!document.webkitFullscreenElement) {
-        sessionStorage.setItem("violation", true);
-        submitTest();
-        showToast("Fullscreen mode is required! Your test has been submitted.");
-    }
-});
-
-window.addEventListener("beforeunload", async () => {
-    sessionStorage.setItem("violation", true);
-    submitTest();
-});
-
-// Prevent back/forward navigation using browser history
-history.pushState(null, null, location.href);
-window.addEventListener("popstate", function () {
-    history.pushState(null, null, location.href);
-    sessionStorage.setItem("violation", true);
-    submitTest();
-});
-
-
-
-document.addEventListener("keydown", function (e) {
-    if (e.key === "Meta" || e.key === "Win") {
-        console.warn("Windows/Command key pressed! Auto-submitting test...");
-        sessionStorage.setItem("violation", true);
-        submitTest();
-        showToast("Pressing Windows/Command key is not allowed! Your test has been submitted.");
-    }
-
-    if ((e.altKey && e.key === "Tab") || (e.ctrlKey && e.key === "Tab")) {
-        console.warn("Alt+Tab or Ctrl+Tab detected! Auto-submitting test...");
-        sessionStorage.setItem("violation", true);
-        submitTest();
-        showToast("Task switching is not allowed! Your test has been submitted.");
-    }
-
-    if (e.key === "Backspace") {
-        let target = e.target.tagName.toLowerCase();
-        if (target !== "input" && target !== "textarea") {
-            sessionStorage.setItem("violation", true);
-            e.preventDefault();
-        }
-    }
-});
-
-
-let touchStartX = 0;
-let touchStartY = 0;
-
-window.addEventListener("touchstart", function (e) {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-}, { passive: true });
-
-window.addEventListener("touchmove", function (e) {
-    let touchEndX = e.touches[0].clientX;
-    let touchEndY = e.touches[0].clientY;
-
-    let deltaX = touchEndX - touchStartX;
-    let deltaY = touchEndY - touchStartY;
-
-    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-        e.preventDefault(); 
-    }
-}, { passive: false });
-
-
-// Prevent mouse back/forward button navigation
-window.addEventListener("mousedown", function (e) {
-    if (e.button === 3 || e.button === 4) { // 3 = Back button, 4 = Forward button
-        e.preventDefault();
-        sessionStorage.setItem("violation", true);
-        submitTest();
-    }
-});
-
-
-let lastActiveTime = performance.now();
-document.addEventListener("visibilitychange", async () => {
-    const timeElapsed = performance.now() - lastActiveTime;
-
-    if (document.hidden) {
-        console.log("Page hidden.");
-
-        // If time gap is too large, assume system sleep happened (e.g., > 10 sec)
-        if (timeElapsed > 10000) {
-            console.log("System likely went to sleep. Ignoring event.");
-            return;
-        }
-        sessionStorage.setItem("violation", true);
-        submitTest();
-    }
-
-    lastActiveTime = performance.now();
-});
 
 submitButton.addEventListener("click", submitTest);
