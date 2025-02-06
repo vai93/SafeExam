@@ -152,7 +152,9 @@ startButton.addEventListener("click", () => {
     submitButton.style.display = "block";
     timer = setInterval(updateTimer, 1000);
     forceFullscreen();
-    fetchQuestions();
+    setTimeout(() => {
+        fetchQuestions();
+    }, 100); ;
 
     document.addEventListener("fullscreenchange", () => {
         if (!document.fullscreenElement) {
@@ -162,6 +164,13 @@ startButton.addEventListener("click", () => {
         }
     });
 });});
+document.addEventListener("webkitfullscreenchange", () => {
+    if (!document.webkitFullscreenElement) {
+        sessionStorage.setItem("violation", true);
+        submitTest();
+        showToast("Fullscreen mode is required! Your test has been submitted.");
+    }
+});
 
 window.addEventListener("beforeunload", async () => {
     sessionStorage.setItem("violation", true);
