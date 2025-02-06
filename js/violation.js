@@ -112,3 +112,41 @@ document.addEventListener("visibilitychange", async () => {
     lastActiveTime = performance.now();
 });
 
+let isAlertActive = false;
+let blurStartTime = null;
+let violationTimeout = null;
+
+const originalAlert = window.alert;
+window.alert = function (message) {
+    isAlertActive = true;
+    setTimeout(() => (isAlertActive = false), 1000); // Reset after 1 sec
+    originalAlert(message);
+};
+window.addEventListener("blur", () => {
+    blurStartTime = performance.now();
+
+    // Start a 10-second timer; if the user doesn't return, submit the test
+    violationTimeout = setTimeout(() => {
+        if (!document.hasFocus() && !isAlertActive) {
+            console.warn("Exam window lost focus for too long! Auto-submitting test...");
+            sessionStorage.setItem("violation", true);
+            submitTest();
+            showToast("Switching to another tab for more than 10 seconds is not allowed! Your test has been submitted.");
+        }
+    }, 2000); // 10-second delay
+});
+window.addEventListener("focus", () => {
+    if (blurStartTime) {
+        const timeAway = performance.now() - blurStartTime;
+
+        if (timeAway < 10000) {
+            console.log(`User returned within ${Math.round(timeAway / 1000)} seconds. No penalty.`);
+        } else {
+            console.warn("User returned after 10 seconds, but test was already submitted.");
+        }
+    }
+
+    // Reset timers since the user is back
+    clearTimeout(violationTimeout);
+    blurStartTime = null;
+});

@@ -56,6 +56,7 @@ async function checkResponseInDatabase(rollNumber) {
 }
 
 async function fetchQuestions() {
+    console.log("in fetch que");
     const mcqSection = document.getElementById("mcq-section");
     mcqSection.style.display = "block";  // Ensure section is visible
     mcqSection.innerHTML = "";  // Clear previous questions
@@ -74,10 +75,12 @@ async function fetchQuestions() {
             questionData.id = doc.id;
             questions.push(questionData);
         });
+        console.log(" Fetched questions:", questions[0]);
         shuffleQuestions(questions);
         generateForm(questions);
     } catch (error) {
         console.error("Error fetching questions:", error);
+        alert("Failed to load questions. Please refresh.");
     } finally {
         loader.style.display = "none";
     }
@@ -171,12 +174,13 @@ function forceFullscreen() {
         }
 }
 
-startButton.addEventListener("click", () => {
+startButton.addEventListener("click", async () => {
     startButton.style.display = "none";
     mcqSection.style.display = "block";
     submitButton.style.display = "block";
     timer = setInterval(updateTimer, 1000);
-    forceFullscreen();
+    await forceFullscreen();
+    console.log("Fetching questions now...");
     setTimeout(() => {
         fetchQuestions();
     }, 100); ;
@@ -187,5 +191,7 @@ startButton.addEventListener("click", () => {
         }
     });
 });});
+
+
 
 submitButton.addEventListener("click", submitTest);
