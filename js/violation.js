@@ -16,16 +16,18 @@ function submitTest() {
 
 
 document.addEventListener("webkitfullscreenchange", () => {
-    if (!document.webkitFullscreenElement) {
+    if (!document.webkitFullscreenElement&& !isIOS()) {
         sessionStorage.setItem("violation", true);
         submitTest();
         showToast("Fullscreen mode is required! Your test has been submitted.");
     }
 });
 
-window.addEventListener("beforeunload", async () => {
-    sessionStorage.setItem("violation", true);
-    submitTest();
+window.addEventListener("beforeunload", async (event) => {
+    if (!isIOS()) {  // Skip on iOS
+        sessionStorage.setItem("violation", true);
+        submitTest();
+    }
 });
 
 // Prevent back/forward navigation using browser history
@@ -123,9 +125,11 @@ window.alert = function (message) {
     originalAlert(message);
 };
 window.addEventListener("blur", () => {
+    if (isAlertActive) return; // Don't submit if an alert is open
+
     blurStartTime = performance.now();
 
-    // Start a 10-second timer; if the user doesn't return, submit the test
+    // Start a timer; submit if user doesn't return within 10 seconds
     violationTimeout = setTimeout(() => {
         if (!document.hasFocus() && !isAlertActive) {
             console.warn("Exam window lost focus for too long! Auto-submitting test...");
@@ -133,7 +137,7 @@ window.addEventListener("blur", () => {
             submitTest();
             showToast("Switching to another tab for more than 10 seconds is not allowed! Your test has been submitted.");
         }
-    }, 2000); // 10-second delay
+    }, 2000);  // 10-second delay
 });
 window.addEventListener("focus", () => {
     if (blurStartTime) {

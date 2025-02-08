@@ -56,7 +56,6 @@ async function checkResponseInDatabase(rollNumber) {
 }
 
 async function fetchQuestions() {
-    alert("in fetch que");
     const mcqSection = document.getElementById("mcq-section");
     mcqSection.style.display = "block";  // Ensure section is visible
     mcqSection.innerHTML = "";  // Clear previous questions
@@ -75,7 +74,6 @@ async function fetchQuestions() {
             questionData.id = doc.id;
             questions.push(questionData);
         });
-        alert(" Fetched questions:", questions[0]);
         shuffleQuestions(questions);
         generateForm(questions);
     } catch (error) {
@@ -94,7 +92,6 @@ function shuffleQuestions(questions) {
 }
 
 function generateForm(questions) {
-    alert("form generated");
     questions.forEach((question) => {
       
         const questionDiv = document.createElement("div");
@@ -166,29 +163,36 @@ document.addEventListener("DOMContentLoaded", function () {
     const startButton = document.getElementById("start-button");
 
 
-function forceFullscreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch((err) => {
-                alert(`Error enabling fullscreen: ${err.message}`);
-                submitTest();
-            });
+    function isIOS() {
+        return /iPhone|iPad|iPod/.test(navigator.userAgent);
+    }
+    
+    async function forceFullscreen() {
+        if (isIOS()) {
+            alert("Fullscreen mode is not supported on iOS Safari.");
+            return;  // Skip fullscreen for iOS
         }
-}
+    
+        if (!document.fullscreenElement) {
+            try {
+                await document.documentElement.requestFullscreen();
+            } catch (err) {
+                alert(`Fullscreen error: ${err.message}`);
+                submitTest();
+            }
+        }
+    }
 
 startButton.addEventListener("click", async () => {
     startButton.style.display = "none";
     mcqSection.style.display = "block";
     submitButton.style.display = "block";
     timer = setInterval(updateTimer, 1000);
-    alert("before fullscreen...");
     await forceFullscreen();
-    alert("Fetching questions now...");
-    setTimeout(() => {
-        fetchQuestions();
-    }, 100); ;
+    fetchQuestions();
 
     document.addEventListener("fullscreenchange", () => {
-        if (!document.fullscreenElement) {
+        if (!document.fullscreenElement && !isIOS()) {  
             submitTest();
         }
     });
