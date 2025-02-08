@@ -56,7 +56,7 @@ async function checkResponseInDatabase(rollNumber) {
 }
 
 async function fetchQuestions() {
-    console.log("in fetch que");
+    alert("in fetch que");
     const mcqSection = document.getElementById("mcq-section");
     mcqSection.style.display = "block";  // Ensure section is visible
     mcqSection.innerHTML = "";  // Clear previous questions
@@ -75,7 +75,7 @@ async function fetchQuestions() {
             questionData.id = doc.id;
             questions.push(questionData);
         });
-        console.log(" Fetched questions:", questions[0]);
+        alert(" Fetched questions:", questions[0]);
         shuffleQuestions(questions);
         generateForm(questions);
     } catch (error) {
@@ -94,6 +94,7 @@ function shuffleQuestions(questions) {
 }
 
 function generateForm(questions) {
+    alert("form generated");
     questions.forEach((question) => {
       
         const questionDiv = document.createElement("div");
