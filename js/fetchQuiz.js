@@ -181,7 +181,7 @@ startButton.addEventListener("click", async () => {
     submitButton.style.display = "block";
     timer = setInterval(updateTimer, 1000);
     await forceFullscreen();
-    console.log("Fetching questions now...");
+    alert("Fetching questions now...");
     setTimeout(() => {
         fetchQuestions();
     }, 100); ;
