@@ -180,6 +180,7 @@ startButton.addEventListener("click", async () => {
     mcqSection.style.display = "block";
     submitButton.style.display = "block";
     timer = setInterval(updateTimer, 1000);
+    alert("before fullscreen...");
     await forceFullscreen();
     alert("Fetching questions now...");
     setTimeout(() => {
