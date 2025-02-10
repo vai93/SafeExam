@@ -7,7 +7,7 @@ document.getElementById("quizForm").addEventListener("submit", async (e) => {
     sessionStorage.removeItem("violation");
     const uniqueKey = String(document.getElementById("uniqueKey").value.trim());
     try {
-        const studentDoc = doc(db, "FaculyDatabase", rollNumber);
+        const studentDoc = doc(db, "StudentDetails2022", rollNumber);
         const docSnap = await getDoc(studentDoc);
         if (docSnap.exists()) {
             const data = docSnap.data();
