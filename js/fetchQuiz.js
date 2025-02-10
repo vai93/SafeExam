@@ -169,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
     async function forceFullscreen() {
         if (isIOS()) {
-            alert("Fullscreen mode is not supported on iOS Safari.");
+            alert("Fullscreen mode permission denied by iOS; however, leaving the screen will still submit the exam.");
             return;  // Skip fullscreen for iOS
         }
     
