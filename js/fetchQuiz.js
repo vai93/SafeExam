@@ -18,7 +18,7 @@ if (rollNumber) {
 }
 async function nameFind(rollNumber) {
     try {
-        const querySnapshot = await getDocs(collection(db, "StudentDetails2022"));
+        const querySnapshot = await getDocs(collection(db, "FaculyDatabase"));
         let nameFound = false;
 
         querySnapshot.forEach((doc) => {
