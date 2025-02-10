@@ -4,7 +4,7 @@ const timerDisplay = document.getElementById("timer");
 const submitButton = document.getElementById("submit-button");
 const mcqSection = document.getElementById("mcq-section");
 let timer;
-let timeLeft = 300; //5min:5*60=300
+let timeLeft = 600; //5min:5*60=300
 const rollNumber = sessionStorage.getItem('rollNumber');
     if (rollNumber) {
         document.getElementById('rollnumber').innerHTML = 'Roll Number: ' + rollNumber;
@@ -18,19 +18,19 @@ if (rollNumber) {
 }
 async function nameFind(rollNumber) {
     try {
-        const querySnapshot = await getDocs(collection(db, "StudentDetails2022"));
+        const querySnapshot = await getDocs(collection(db, "FaculyDatabase"));
         let nameFound = false;
 
         querySnapshot.forEach((doc) => {
             let student = doc.data();
             if (student.rollNumber === rollNumber) {
-                document.getElementById("email").innerHTML = "Email: " + student.email;
+                document.getElementById("name").innerHTML = "Name: " + student.name;
                 nameFound = true;
             }
         });
 
         if (!nameFound) {
-            document.getElementById("email").innerHTML = "No email found.";
+            document.getElementById("name").innerHTML = "No Name found.";
         }
     } catch (error) {
         console.error("Error checking database:", error);
