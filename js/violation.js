@@ -135,7 +135,7 @@ window.addEventListener("blur", () => {
             console.warn("Exam window lost focus for too long! Auto-submitting test...");
             sessionStorage.setItem("violation", true);
             submitTest();
-            showToast("Switching to another tab for more than 10 seconds is not allowed! Your test has been submitted.");
+            showToast("Switching to another tab for more than 2 seconds is not allowed! Your test has been submitted.");
         }
     }, 2000);  // 10-second delay
 });
