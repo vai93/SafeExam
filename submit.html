@@ -62,12 +62,12 @@
         </div>
     </footer>
     <script>
-        history.pushState(null, null, location.href);
-        history.pushState(null, null, location.href);
-        history.pushState(null, null, location.href);
-        window.onpopstate = function () {
-            history.pushState(null, null, location.href);
-        };
+        (function () {
+            history.pushState(null, null, document.URL);
+            window.addEventListener("popstate", function () {
+                history.pushState(null, null, document.URL);
+            });
+        })();
     </script>
 
 </body>
