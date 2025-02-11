@@ -25,6 +25,7 @@ async function nameFind(rollNumber) {
             let student = doc.data();
             if (student.rollNumber === rollNumber) {
                 document.getElementById("name").innerHTML = "Name: " + student.name;
+                sessionStorage.setItem('name',student.name);
                 nameFound = true;
             }
         });
@@ -74,6 +75,7 @@ async function fetchQuestions() {
             questionData.id = doc.id;
             questions.push(questionData);
         });
+
         shuffleQuestions(questions);
         generateForm(questions);
     } catch (error) {
@@ -92,24 +94,45 @@ function shuffleQuestions(questions) {
 }
 
 function generateForm(questions) {
-    questions.forEach((question) => {
-      
+    questions.forEach((question, index) => {
         const questionDiv = document.createElement("div");
-        questionDiv.classList.add("question");
+        questionDiv.classList.add("question-box"); // ✅ Apply CSS class for styling
 
+        // ✅ Add Sequential Number
+        const questionNumber = document.createElement("h3");
+        questionNumber.textContent = `Q${index + 1}`;
+        questionNumber.classList.add("question-number");
+        questionDiv.appendChild(questionNumber);
+
+        // ✅ Add Image If Exists
+        if (question.imageURL && question.imageURL.trim() !== "") {
+            const img = document.createElement("img");
+            img.src = question.imageURL;
+            img.alt = "Question Image";
+            img.classList.add("question-image"); // ✅ Apply CSS for image
+            questionDiv.appendChild(img);
+        }
+
+        // ✅ Add Question Text
         const questionText = document.createElement("p");
         questionText.textContent = question.question;
+        questionText.classList.add("question-text");
         questionDiv.appendChild(questionText);
 
+        // ✅ Add Options
         const optionsDiv = document.createElement("div");
         optionsDiv.classList.add("options");
 
         question.options.forEach((option) => {
             const label = document.createElement("label");
+            label.classList.add("option-label");
+
             const radioButton = document.createElement("input");
             radioButton.type = "radio";
             radioButton.name = question.id;
             radioButton.value = option;
+            radioButton.classList.add("option-radio");
+
             label.appendChild(radioButton);
             label.appendChild(document.createTextNode(option));
             optionsDiv.appendChild(label);
@@ -119,6 +142,7 @@ function generateForm(questions) {
         mcqSection.appendChild(questionDiv);
     });
 }
+
 function showToast(message) {
     const toast = document.getElementById("toast");
     toast.textContent = message;

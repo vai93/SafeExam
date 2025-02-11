@@ -10,7 +10,7 @@ quizForm.addEventListener("submit", async (e) => {
     }
     quizSubmitted = true;
     const rollNumber = sessionStorage.getItem("rollNumber") || "No roll number found";
-    
+    const name=sessionStorage.getItem("name") || "No roll name found";
     const now = new Date();
     const submittedAt = new Date();
     const formattedDate = `${now.getHours() < 10 ? "0" + now.getHours() : now.getHours()}:${now.getMinutes() < 10 ? "0" + now.getMinutes() : now.getMinutes()}_${now.getDate() < 10 ? "0" + now.getDate() : now.getDate()}-${
@@ -53,7 +53,7 @@ quizForm.addEventListener("submit", async (e) => {
         }
         const userId = studentDoc.data().userId;
         const customDocId = `${rollNumber}_${formattedDate}`;
-        await setDoc(doc(db, "StudentResponses", customDocId), { answers: answers, score: score, rollNumber: rollNumber, submittedAt: submittedAt,violation:violation }, { merge: false });
+        await setDoc(doc(db, "StudentResponses", customDocId), { answers: answers, score: score, rollNumber: rollNumber, submittedAt: submittedAt,violation:violation,studentName:name }, { merge: false });
         console.log("Quiz submitted successfully!");
         window.location.href = "submit.html";
     } catch (error) {

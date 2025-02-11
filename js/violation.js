@@ -137,7 +137,7 @@ window.addEventListener("blur", () => {
             submitTest();
             showToast("Switching to another tab for more than 2 seconds is not allowed! Your test has been submitted.");
         }
-    }, 2000);  // 10-second delay
+    }, 2000);  // 2-second delay
 });
 window.addEventListener("focus", () => {
     if (blurStartTime) {
