@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Test</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="container">
+        <p id="rollnumber"></p>
+        <p id="name"></p>
+        <h1>Demo Test-1</h1>
+        <div id="toast"></div>
+        <p id="timer">Time Left: 10:00</p>
+        <form id="quizForm">
+            <div id="mcq-section"></div>
+            <div id="loader" style="display: none;">
+                <div id="spinner"></div>
+            </div>
+            <button id="submit-button" type="submit"style="display: none;">Submit</button>
+        </form>
+        <button id="start-button">Start</button>
+    </div>
+    <script type="module" src="js/violation.js"></script>
+    <script type="module" src="js/firebase.js"></script> 
+    <script type="module" src="js/fetchQuiz.js"></script>
+    <script type="module" src="js/submitQuiz.js"></script>    
+</body>
+</html>
