@@ -20,7 +20,7 @@ document.getElementById("quizForm").addEventListener("submit", async (e) => {
                 alert("Invalid unique key. Please try again.");
             }
         } else {
-            alert("Roll number not found. Please enter a valid roll number.");
+            alert(rollNumber,studentdb,"Roll number not found. Please enter a valid roll number.");
         }
     } catch (error) {
         console.error("Error validating student:", error);
