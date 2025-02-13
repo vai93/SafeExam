@@ -59,7 +59,7 @@ quizForm.addEventListener("submit", async (e) => {
         const customDocId = `${rollNumber}_${formattedDate}`;
         await setDoc(doc(db, responsedb, customDocId), { answers: answers, score: score, rollNumber: rollNumber, submittedAt: submittedAt,violation:violation,studentName:name }, { merge: false });
         console.log("Quiz submitted successfully!");
-        window.location.href = "cd1/submit.html";
+        window.location.href = "submit.html";
     } catch (error) {
         console.error("Error submitting answers: ", error);
         alert("Error submitting answers. Please try again.");
