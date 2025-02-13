@@ -15,14 +15,12 @@ document.getElementById("quizForm").addEventListener("submit", async (e) => {
             const data = docSnap.data();
             if (String(data.uniqueKey) === uniqueKey) {
                 alert("Validation successful! Starting quiz.");
-                window.location.href = "mcq.html";
+                window.location.href = "cd1/mcq.html";
             } else {
                 alert("Invalid unique key. Please try again.");
             }
         } else {
-             alert(rollNumber);
-            alert(studentdb);
-            alert(rollNumber,studentdb,"Roll number not found. Please enter a valid roll number.");
+            alert("Roll number not found. Please enter a valid roll number.");
         }
     } catch (error) {
         console.error("Error validating student:", error);
