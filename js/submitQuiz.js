@@ -46,7 +46,7 @@ quizForm.addEventListener("submit", async (e) => {
     const violation = sessionStorage.getItem("violation") || false;
     sessionStorage.removeItem("violation");
     try {
-        const studentDocRef = doc(db, "FaculyDatabase", rollNumber);
+        const studentDocRef = doc(db, "StudentDetails2022A1", rollNumber);
         const studentDoc = await getDoc(studentDocRef);
         if (!studentDoc.exists()) {
             throw new Error("Student not found");
