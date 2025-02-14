@@ -63,5 +63,6 @@ quizForm.addEventListener("submit", async (e) => {
     } catch (error) {
         console.error("Error submitting answers: ", error);
         alert("Error submitting answers. Please try again.");
+        window.location.href = "index.html";
     }
 });
