@@ -220,7 +220,7 @@ startButton.addEventListener("click", async () => {
     if (rollNumber) {
     fetchQuestions();}
     else{alert("Must login first");
-        window.location.href = "index.html";
+        window.location.href = "/cd1/index.html";
     }
 
     document.addEventListener("fullscreenchange", () => {
