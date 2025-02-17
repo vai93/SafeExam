@@ -1,7 +1,8 @@
 import { setDoc, doc, getDoc, collection } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 import { db } from "./firebase.js";
 const studentdb="StudentDetails2022";
-
+sessionStorage.removeItem("validStudent");
+sessionStorage.removeItem("violation");
 document.getElementById("quizForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const rollNumber = document.getElementById("rollNumber").value.trim();
