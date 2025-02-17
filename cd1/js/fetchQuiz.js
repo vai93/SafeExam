@@ -8,8 +8,9 @@ const timerDisplay = document.getElementById("timer");
 const submitButton = document.getElementById("submit-button");
 const mcqSection = document.getElementById("mcq-section");
 let timer;
-let timeLeft = 1200; //20min:20*60=1200
+let timeLeft = 600; //5min:5*60=300
 const rollNumber = sessionStorage.getItem('rollNumber');
+const validStudent = sessionStorage.getItem('validStudent');
     if (rollNumber) {
         document.getElementById('rollnumber').innerHTML = 'Roll Number: ' + rollNumber;
     } else {
@@ -217,7 +218,7 @@ startButton.addEventListener("click", async () => {
     submitButton.style.display = "block";
     timer = setInterval(updateTimer, 1000);
     await forceFullscreen();
-    if (rollNumber) {
+    if (validStudent) {
     fetchQuestions();}
     else{alert("Must login first");
         window.location.href = "/cd1/index.html";
