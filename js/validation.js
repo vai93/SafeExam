@@ -3,6 +3,7 @@ import { db } from "./firebase.js";
 document.getElementById("quizForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const rollNumber = document.getElementById("rollNumber").value.trim();
+    sessionStorage.removeItem("validStudent");
     sessionStorage.setItem("rollNumber", rollNumber);
     sessionStorage.removeItem("violation");
     const uniqueKey = String(document.getElementById("uniqueKey").value.trim());
@@ -12,6 +13,7 @@ document.getElementById("quizForm").addEventListener("submit", async (e) => {
         if (docSnap.exists()) {
             const data = docSnap.data();
             if (String(data.uniqueKey) === uniqueKey) {
+                sessionStorage.setItem("validStudent", true);
                 alert("Validation successful! Starting quiz.");
                 window.location.href = "mcq.html";
             } else {
