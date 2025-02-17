@@ -8,7 +8,7 @@ const timerDisplay = document.getElementById("timer");
 const submitButton = document.getElementById("submit-button");
 const mcqSection = document.getElementById("mcq-section");
 let timer;
-let timeLeft = 600; //5min:5*60=300
+let timeLeft = 1200; //20min:20*60=1200
 const rollNumber = sessionStorage.getItem('rollNumber');
     if (rollNumber) {
         document.getElementById('rollnumber').innerHTML = 'Roll Number: ' + rollNumber;
