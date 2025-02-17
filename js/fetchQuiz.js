@@ -213,7 +213,11 @@ startButton.addEventListener("click", async () => {
     submitButton.style.display = "block";
     timer = setInterval(updateTimer, 1000);
     await forceFullscreen();
-    fetchQuestions();
+    if (rollNumber) {
+        fetchQuestions();}
+        else{alert("Must login first");
+            window.location.href = "/index.html";
+        }
 
     document.addEventListener("fullscreenchange", () => {
         if (!document.fullscreenElement && !isIOS()) {  
