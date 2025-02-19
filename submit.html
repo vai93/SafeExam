@@ -38,12 +38,30 @@
     </style>
     <script>
         window.onload = () => {
+            // Display quiz score from localStorage
             const score = localStorage.getItem("quizScore");
             if (score !== null) {
                 document.getElementById("scoreDisplay").innerText = `Your score is: ${score}`;
             }
             localStorage.removeItem("quizScore");
+
+            // Check for "violation" in sessionStorage and display it if set
+            const violation = sessionStorage.getItem("violation");
+            if (violation) {
+                document.getElementById("violationMessage").innerText = `You have violated this rule: ${violation}`;
+            }
+            sessionStorage.removeItem("violation");
         };
+
+        (function () {
+    history.replaceState(null, null, location.href);
+    window.addEventListener("popstate", function () {
+        window.location.href = "index.html";
+    });
+    setTimeout(function () {
+        history.pushState(null, null, location.href); 
+    }, 0);
+        })();
     </script>
 </head>
 
@@ -52,6 +70,7 @@
         <h1>Test Submitted</h1>
         <p>Your Test has been successfully submitted.</p>
         <p id="scoreDisplay"></p>
+        <p id="violationMessage" style="color: red; font-weight: bold;"></p>
     </div>
     <footer
         style="background: linear-gradient(180deg, rgb(240, 247, 255) 0%, rgb(255, 255, 255) 100%); color: #333; margin-top: 70vh; padding: 20px 0;">
@@ -61,15 +80,6 @@
             <p class="fcontent" style="text-align: right;">Designed & Developed By Vaibhavi Patel</p>
         </div>
     </footer>
-    <script>
-        (function () {
-            history.pushState(null, null, document.URL);
-            window.addEventListener("popstate", function () {
-                history.pushState(null, null, document.URL);
-            });
-        })();
-    </script>
-
 </body>
 
 </html>
