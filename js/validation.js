@@ -1,5 +1,7 @@
 import { setDoc, doc, getDoc, collection } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 import { db } from "./firebase.js";
+const path1="mcq.html";
+
 document.getElementById("quizForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const rollNumber = document.getElementById("rollNumber").value.trim();
@@ -15,7 +17,7 @@ document.getElementById("quizForm").addEventListener("submit", async (e) => {
             if (String(data.uniqueKey) === uniqueKey) {
                 sessionStorage.setItem("validStudent", true);
                 alert("Validation successful! Starting quiz.");
-                window.location.href = "mcq.html";
+                window.location.href = path1;
             } else {
                 alert("Invalid unique key. Please try again.");
             }

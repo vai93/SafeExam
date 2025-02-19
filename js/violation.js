@@ -1,12 +1,5 @@
-function showToast(message) {
-    const toast = document.getElementById("toast");
-    toast.textContent = message;
-    toast.style.display = "block";
-    setTimeout(() => {
-        toast.style.display = "none";
-    }, 50000);
-}
 
+let pageLoadTime = performance.now();
 function submitTest() {
     const form = document.getElementById("quizForm");
     if (form) {
@@ -17,7 +10,8 @@ function submitTest() {
 
 document.addEventListener("webkitfullscreenchange", () => {
     if (!document.webkitFullscreenElement&& !isIOS()) {
-        sessionStorage.setItem("violation", true);
+       
+        sessionStorage.setItem("violation", "Fullscreen mode changed");
         submitTest();
         showToast("Fullscreen mode is required! Your test has been submitted.");
     }
@@ -25,7 +19,8 @@ document.addEventListener("webkitfullscreenchange", () => {
 
 window.addEventListener("beforeunload", async (event) => {
     if (!isIOS()) {  // Skip on iOS
-        sessionStorage.setItem("violation", true);
+        sessionStorage.setItem("violation", "beforeunload");
+     
         submitTest();
     }
 });
@@ -34,30 +29,30 @@ window.addEventListener("beforeunload", async (event) => {
 history.pushState(null, null, location.href);
 window.addEventListener("popstate", function () {
     history.pushState(null, null, location.href);
-    sessionStorage.setItem("violation", true);
+    sessionStorage.setItem("violation", "back/forward navigation");
+   
     submitTest();
 });
 
 
 document.addEventListener("keydown", function (e) {
     if (e.key === "Meta" || e.key === "Win") {
-        console.warn("Windows/Command key pressed! Auto-submitting test...");
-        sessionStorage.setItem("violation", true);
+        sessionStorage.setItem("violation", "Windows/Command key pressed");
+        
         submitTest();
-        showToast("Pressing Windows/Command key is not allowed! Your test has been submitted.");
     }
 
     if ((e.altKey && e.key === "Tab") || (e.ctrlKey && e.key === "Tab")) {
-        console.warn("Alt+Tab or Ctrl+Tab detected! Auto-submitting test...");
-        sessionStorage.setItem("violation", true);
+        sessionStorage.setItem("violation", "Alt+Tab or Ctrl+Tab detected");
+    
         submitTest();
-        showToast("Task switching is not allowed! Your test has been submitted.");
     }
 
     if (e.key === "Backspace") {
         let target = e.target.tagName.toLowerCase();
         if (target !== "input" && target !== "textarea") {
-            sessionStorage.setItem("violation", true);
+            sessionStorage.setItem("violation", "Backspace pressed");
+            
             e.preventDefault();
         }
     }
@@ -89,68 +84,75 @@ window.addEventListener("touchmove", function (e) {
 window.addEventListener("mousedown", function (e) {
     if (e.button === 3 || e.button === 4) { // 3 = Back button, 4 = Forward button
         e.preventDefault();
-        sessionStorage.setItem("violation", true);
+        sessionStorage.setItem("violation", "mouse back/forward");
         submitTest();
     }
 });
 
 
-let lastActiveTime = performance.now();
-document.addEventListener("visibilitychange", async () => {
-    const timeElapsed = performance.now() - lastActiveTime;
 
-    if (document.hidden) {
-        console.log("Page hidden.");
-
-        // If time gap is too large, assume system sleep happened (e.g., > 10 sec)
-        if (timeElapsed > 10000) {
-            console.log("System likely went to sleep. Ignoring event.");
-            return;
-        }
-        sessionStorage.setItem("violation", true);
-        submitTest();
-    }
-
-    lastActiveTime = performance.now();
-});
-
-let isAlertActive = false;
 let blurStartTime = null;
 let violationTimeout = null;
+let isAlertActive = false;
 
+// Override alert to prevent false triggers
 const originalAlert = window.alert;
 window.alert = function (message) {
     isAlertActive = true;
     setTimeout(() => (isAlertActive = false), 1000); // Reset after 1 sec
     originalAlert(message);
 };
+
+// Detect blur but ignore quick distractions (like notifications)
 window.addEventListener("blur", () => {
-    if (isAlertActive) return; // Don't submit if an alert is open
+    if (performance.now() - pageLoadTime < 2000) {
+        console.log("Ignoring blur on initial load.");
+        return; // Ignore first 2 seconds
+    }
+    if (isAlertActive) return; // Ignore alerts
 
     blurStartTime = performance.now();
 
-    // Start a timer; submit if user doesn't return within 10 seconds
-    violationTimeout = setTimeout(() => {
-        if (!document.hasFocus() && !isAlertActive) {
-            console.warn("Exam window lost focus for too long! Auto-submitting test...");
-            sessionStorage.setItem("violation", true);
-            submitTest();
-            showToast("Switching to another tab for more than 2 seconds is not allowed! Your test has been submitted.");
-        }
-    }, 2000);  // 2-second delay
-});
-window.addEventListener("focus", () => {
-    if (blurStartTime) {
-        const timeAway = performance.now() - blurStartTime;
-
-        if (timeAway < 10000) {
-            console.log(`User returned within ${Math.round(timeAway / 1000)} seconds. No penalty.`);
+    // If tab is still visible after 300ms, it's a notification, so ignore
+    setTimeout(() => {
+        if (document.visibilityState === "visible" && document.hasFocus()) {
+            console.log("Brief blur detected, likely a notification. Ignoring.");
         } else {
-            console.warn("User returned after 10 seconds, but test was already submitted.");
+            sessionStorage.setItem("violation", "switched tabs or minimized");
+            submitTest();
         }
+    }, 300); // **300ms delay to differentiate notifications**
+});
+
+// Detect actual tab switching or minimizing
+document.addEventListener("visibilitychange", () => {
+    if (performance.now() - pageLoadTime < 2000) {
+        console.log("Ignoring visibility change on initial load.");
+        return; // Ignore first 2 seconds
     }
 
-    // Reset timers since the user is back
-    clearTimeout(violationTimeout);
-    blurStartTime = null;
+
+    if (document.visibilityState === "hidden") {
+        
+        blurStartTime = performance.now();
+
+        // Start a timer to check if the user is gone too long
+        violationTimeout = setTimeout(() => {
+            if (document.visibilityState === "hidden" && !isAlertActive) {
+                sessionStorage.setItem("violation", "switched tabs or minimized for too long");
+                submitTest();
+            }
+        }, 3000); // **3-second delay for real violations**
+    } else {
+        if (blurStartTime) {
+            const timeAway = performance.now() - blurStartTime;
+
+            if (timeAway < 3000) {
+                console.log(`User returned within ${Math.round(timeAway / 1000)} seconds. No penalty.`);
+                clearTimeout(violationTimeout);
+            }
+        }
+        blurStartTime = null;
+    }
 });
+

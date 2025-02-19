@@ -1,5 +1,10 @@
 import { db } from "./firebase.js";
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+const questiondb="Questions";
+const studentdb="FaculyDatabase";
+const responsedb="StudentResponses";
+const path1="index.html";
+
 const timerDisplay = document.getElementById("timer");
 const submitButton = document.getElementById("submit-button");
 const mcqSection = document.getElementById("mcq-section");
@@ -19,7 +24,7 @@ if (rollNumber) {
 }
 async function nameFind(rollNumber) {
     try {
-        const querySnapshot = await getDocs(collection(db, "FaculyDatabase"));
+        const querySnapshot = await getDocs(collection(db, studentdb));
         let nameFound = false;
 
         querySnapshot.forEach((doc) => {
@@ -42,7 +47,7 @@ async function nameFind(rollNumber) {
 
 async function checkResponseInDatabase(rollNumber) {
     try {
-        const querySnapshot = await getDocs(collection(db, "StudentResponses"));
+        const querySnapshot = await getDocs(collection(db, responsedb));
         let responseFound = false;
         querySnapshot.forEach((doc) => {
             if (doc.id.includes(rollNumber)) {
@@ -69,7 +74,7 @@ async function fetchQuestions() {
     spinner.style.position = "fixed";
 
     try {
-        const querySnapshot = await getDocs(collection(db, "Questions"));
+        const querySnapshot = await getDocs(collection(db, questiondb));
         const questions = [];
         querySnapshot.forEach((doc) => {
             let questionData = doc.data();
@@ -182,51 +187,49 @@ function submitTest() {
         form.dispatchEvent(new Event("submit")); // Trigger form submission
     }
 }
+function isIOS() {
+    return /iPhone|iPad|iPod/.test(navigator.userAgent);
+}
+
+async function forceFullscreen() {
+    if (isIOS()) {
+        alert("Fullscreen mode permission denied by iOS; however, leaving the screen will still submit the exam.");
+        return; // Skip fullscreen for iOS
+    }
+
+    if (!document.fullscreenElement) {
+        try {
+            await document.documentElement.requestFullscreen();
+        } catch (err) {
+            alert(`Fullscreen error: ${err.message}`);
+            submitTest(); // Auto-submit if fullscreen fails
+        }
+    }
+}
 
 
-document.addEventListener("DOMContentLoaded", function () {
+    window.onload = async function () {
     const startButton = document.getElementById("start-button");
 
-
-    function isIOS() {
-        return /iPhone|iPad|iPod/.test(navigator.userAgent);
-    }
-    
-    async function forceFullscreen() {
-        if (isIOS()) {
-            alert("Fullscreen mode permission denied by iOS; however, leaving the screen will still submit the exam.");
-            return;  // Skip fullscreen for iOS
+    startButton.addEventListener("click", async () => {
+        startButton.style.display = "none";
+        mcqSection.style.display = "block";
+        submitButton.style.display = "block";
+        timer = setInterval(updateTimer, 1000);
+        await forceFullscreen();
+        if (validStudent) {
+            fetchQuestions();
+        } else {
+            alert("Login is required to begin the test");
+            window.location.href = path1;
         }
-    
-        if (!document.fullscreenElement) {
-            try {
-                await document.documentElement.requestFullscreen();
-            } catch (err) {
-                alert(`Fullscreen error: ${err.message}`);
+
+        document.addEventListener("fullscreenchange", () => {
+            if (!document.fullscreenElement && !isIOS()) {
                 submitTest();
             }
-        }
-    }
-
-startButton.addEventListener("click", async () => {
-    startButton.style.display = "none";
-    mcqSection.style.display = "block";
-    submitButton.style.display = "block";
-    timer = setInterval(updateTimer, 1000);
-    await forceFullscreen();
-    if (validStudent) {
-        fetchQuestions();}
-        else{alert("Must login first");
-            window.location.href = "/index.html";
-        }
-
-    document.addEventListener("fullscreenchange", () => {
-        if (!document.fullscreenElement && !isIOS()) {  
-            submitTest();
-        }
+        });
     });
-});});
-
-
+};
 
 submitButton.addEventListener("click", submitTest);
