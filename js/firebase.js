@@ -1,8 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 const firebaseConfig = {
-    apikey:process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    // apiKey: "AIzaSyB44lalCeugu5WDRCXS3kwsRYvAIvAS0qs",
+    // apikey:process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    apiKey: "AIzaSyB44lalCeugu5WDRCXS3kwsRYvAIvAS0qs",
     authDomain: "safeexam-6b2bd.firebaseapp.com",
     projectId: "safeexam-6b2bd",
     storageBucket: "safeexam-6b2bd.firebasestorage.app",
