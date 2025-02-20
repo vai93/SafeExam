@@ -155,7 +155,4 @@
 .button:focus-visible {
     outline: 2px solid transparent;
     outline-offset: 2px;
-    ring: 2px;
-    ring-offset: 2px;
-    ring-color: rgb(99, 102, 241);
-}
+}}
