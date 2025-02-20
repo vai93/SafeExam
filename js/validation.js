@@ -1,6 +1,6 @@
 import { setDoc, doc, getDoc, collection } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 import { db } from "./firebase.js";
-const studentdb="FacultyDatabase";
+const studentdb="FaculyDatabase";
 const path1="mcq.html";
 
 document.getElementById("quizForm").addEventListener("submit", async (e) => {
