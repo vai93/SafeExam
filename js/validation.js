@@ -4,6 +4,7 @@ const studentdb="FaculyDatabase";
 const path1="mcq.html";
 sessionStorage.removeItem("rollNumber");
 sessionStorage.removeItem("name");
+sessionStorage.removeItem("validStudent");
 document.getElementById("quizForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const rollNumber = document.getElementById("rollNumber").value.trim();
