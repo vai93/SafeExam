@@ -1,5 +1,6 @@
 import { setDoc, doc, getDoc, collection } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 import { db } from "./firebase.js";
+const studentdb="demoTestUsers";
 const path1="mcq.html";
 
 document.getElementById("quizForm").addEventListener("submit", async (e) => {
@@ -9,11 +10,13 @@ document.getElementById("quizForm").addEventListener("submit", async (e) => {
     sessionStorage.setItem("rollNumber", rollNumber);
     sessionStorage.removeItem("violation");
     const uniqueKey = String(document.getElementById("uniqueKey").value.trim());
+   
     try {
-        const studentDoc = doc(db, "FaculyDatabase", rollNumber);
+        const studentDoc = doc(db, studentdb, rollNumber);
         const docSnap = await getDoc(studentDoc);
         if (docSnap.exists()) {
             const data = docSnap.data();
+            sessionStorage.setItem('name',data.name);
             if (String(data.uniqueKey) === uniqueKey) {
                 sessionStorage.setItem("validStudent", true);
                 alert("Validation successful! Starting quiz.");

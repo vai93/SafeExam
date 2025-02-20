@@ -1,7 +1,7 @@
 import { setDoc, doc, getDocs, collection, getDoc,writeBatch } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 import { db } from "./firebase.js";
-const questiondb="Questions";
-const responsedb="StudentResponses";
+const questiondb="demoTestQuestions";
+const responsedb="demoTestResponses";
 const path1="submit.html";
 const path2="index.html";
 
