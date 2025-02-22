@@ -1,7 +1,6 @@
 import { setDoc, doc, getDoc, collection } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 import { db } from "./firebase.js";
-const studentdb="FaculyDatabase";
-// const studentdb="demoTestUsers";
+const studentdb="demoTestUsers";
 const path1="mcq.html";
 sessionStorage.removeItem("rollNumber");
 sessionStorage.removeItem("name");
