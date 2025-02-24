@@ -2,7 +2,7 @@ import { setDoc, doc, getDocs, collection, getDoc,writeBatch } from "https://www
 import { db } from "./firebase.js";
 const questiondb="demoTestQuestions";
 const responsedb="demoTestResponses";
-const path1="submit.html";
+const path1="/submit.html";
 const path2="index.html";
 
 

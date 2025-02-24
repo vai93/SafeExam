@@ -1,15 +1,25 @@
 import { db } from "./firebase.js";
 import { collection, getDocs} from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
-const questiondb="demoTestQuestions";
-const responsedb="demoTestResponses";
-const path1="index.html";
+const questiondb=sessionStorage.getItem("questiondb");
+const responsedb=sessionStorage.getItem("responsedb");
+const examTitle=sessionStorage.getItem("examTitle");
+const examDuration=sessionStorage.getItem("examDuration");
+const examCode=sessionStorage.getItem("examCode");
+let path1;
+if (examCode) {
+    path1 = `/${examCode}/index.html`;  // Correct path structure
+} else {
+    path1 = "/index.html";
+}
 
 
+document.getElementById('examTitle').innerHTML = examTitle+' Test ';
+document.getElementById('timer').innerHTML = "Time Left:"+ examDuration+":00";
 const timerDisplay = document.getElementById("timer");
 const submitButton = document.getElementById("submit-button");
 const mcqSection = document.getElementById("mcq-section");
 let timer;
-let timeLeft = 600; //5min:5*60=300
+let timeLeft = parseInt(examDuration)*60; 
 const rollNumber = sessionStorage.getItem('rollNumber');
 const name = sessionStorage.getItem('name');
 const validStudent = sessionStorage.getItem('validStudent');
