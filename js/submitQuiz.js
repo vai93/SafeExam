@@ -1,9 +1,13 @@
 import { setDoc, doc, getDocs, collection, getDoc,writeBatch } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 import { db } from "./firebase.js";
-const questiondb="demoTestQuestions";
-const responsedb="demoTestResponses";
+const questiondb=sessionStorage.getItem("questiondb");
+const responsedb=sessionStorage.getItem("responsedb");
 const path1="/submit.html";
-const path2="index.html";
+if (examCode) {
+    path2 = `/${examCode}/index.html`;  // Correct path structure
+} else {
+    path2 = "/index.html";
+}
 
 
 let quizSubmitted = false;
