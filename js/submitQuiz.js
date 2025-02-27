@@ -3,11 +3,14 @@ import { db } from "./firebase.js";
 const questiondb=sessionStorage.getItem("questiondb");
 const responsedb=sessionStorage.getItem("responsedb");
 const path1="/submit.html";
+let path2;
+const examCode=sessionStorage.getItem("examCode");
 if (examCode) {
     path2 = `/${examCode}/index.html`;  // Correct path structure
 } else {
     path2 = "/index.html";
 }
+
 
 
 let quizSubmitted = false;
