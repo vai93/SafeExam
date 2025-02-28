@@ -7,7 +7,7 @@ const examDuration=sessionStorage.getItem("examDuration");
 const examCode=sessionStorage.getItem("examCode");
 let path1;
 if (examCode) {
-    path1 = "/index.html"`;  // Correct path structure
+    path1 = "/index.html";  // Correct path structure
 } else {
     path1 = "/index.html";
 }
