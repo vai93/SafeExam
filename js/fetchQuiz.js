@@ -42,7 +42,7 @@ function showToast(message) {
 
 async function checkResponseInDatabase(rollNumber) {
     try {
-        const response = await fetch("http://localhost:3000/api/checkResponse", {
+        const response = await fetch("api/checkResponse", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ rollNumber, testId }),
@@ -100,7 +100,7 @@ async function fetchQuestions() {
     spinner.style.position = "fixed";
 
     try {
-        const response = await fetch("http://localhost:3000/api/fetchQuiz", {
+        const response = await fetch("api/fetchQuiz", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ testId })
