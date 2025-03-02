@@ -1,35 +1,31 @@
-import { db } from "./firebase.js";
-import { collection, getDocs} from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
-const questiondb=sessionStorage.getItem("questiondb");
-const responsedb=sessionStorage.getItem("responsedb");
-const examTitle=sessionStorage.getItem("examTitle");
-const examDuration=sessionStorage.getItem("examDuration");
-const examCode=sessionStorage.getItem("examCode");
+const testTitle=sessionStorage.getItem("testTitle");
+const testDuration=sessionStorage.getItem("testDuration");
+const testId=sessionStorage.getItem("testId");
+const rollNumber = sessionStorage.getItem('rollNumber');
+const studentName = sessionStorage.getItem('name');
+const validStudent = sessionStorage.getItem('validStudent');
 let path1;
-if (examCode) {
-    path1 = "/index.html";  // Correct path structure
-} else {
-    path1 = "/index.html";
+if (testId=="Test765") {
+    path1 = "/index.html";}
+else{
+    path1 = `/${testId}/index.html`;  // Correct path structure
 }
 
 
-document.getElementById('examTitle').innerHTML = examTitle+' Test ';
-document.getElementById('timer').innerHTML = "Time Left:"+ examDuration+":00";
+document.getElementById('examTitle').innerHTML = testTitle;
+document.getElementById('timer').innerHTML = "Time Left:"+ testDuration+":00";
 const timerDisplay = document.getElementById("timer");
-const submitButton = document.getElementById("submit-button");
 const mcqSection = document.getElementById("mcq-section");
 let timer;
-let timeLeft = parseInt(examDuration)*60; 
-const rollNumber = sessionStorage.getItem('rollNumber');
-const name = sessionStorage.getItem('name');
-const validStudent = sessionStorage.getItem('validStudent');
+let timeLeft = parseInt(testDuration)*60; 
+
     if (rollNumber) {
         document.getElementById('rollnumber').innerHTML = 'Roll Number: ' + rollNumber;
     } else {
         document.getElementById('rollnumber').innerHTML = 'No roll number found.';
        }
-    if (name) {
-        document.getElementById("name").innerHTML = "Name: " + name;
+    if (studentName) {
+        document.getElementById("name").innerHTML = "Name: " + studentName;
     } else {
         document.getElementById("name").innerHTML = "No Name found.";
        }
@@ -46,20 +42,52 @@ function showToast(message) {
 
 async function checkResponseInDatabase(rollNumber) {
     try {
-        const querySnapshot = await getDocs(collection(db, responsedb));
-        let responseFound = false;
-        querySnapshot.forEach((doc) => {
-            if (doc.id.includes(rollNumber)) {
-                responseFound = true;
-            }
+        const response = await fetch("http://localhost:3000/api/checkResponse", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ rollNumber, testId }),
         });
-        if (responseFound) { 
-            showToast( `Response already found for roll number: ${rollNumber}.`);}
+
+        const data = await response.json();
+
+        if (data.success && data.responseFound) {
+            showToast(`Response already found for roll number: ${rollNumber}.`);
+            return true;
+        }
+        return false;
     } catch (error) {
-        console.error("Error checking database:", error);
+        console.error("Error checking response:", error);
+        return false;
     }
 }
+document.getElementById("start-button").addEventListener("click", async () => {
+    const testId = sessionStorage.getItem("testId");
+    if (!testId) {
+        alert("Test ID is missing. Please log in again.");
+        window.location.href = path1;
+        return;
+    }
 
+    document.getElementById("start-button").style.display = "none";
+        mcqSection.style.display = "block";
+        document.getElementById("submit-button").style.display = "block";
+        timer = setInterval(updateTimer, 1000);
+        await forceFullscreen();
+        if (validStudent) {
+            fetchQuestions();
+        } else {
+            alert("Login is required to begin the test");
+            window.location.href = path1;
+        }
+
+        document.addEventListener("fullscreenchange", () => {
+            if (!document.fullscreenElement && !isIOS()) {
+                submitTest();
+            }
+        });
+
+        violation();
+    });
 async function fetchQuestions() {
     const mcqSection = document.getElementById("mcq-section");
     mcqSection.style.display = "block";  // Ensure section is visible
@@ -72,21 +100,24 @@ async function fetchQuestions() {
     spinner.style.position = "fixed";
 
     try {
-        const querySnapshot = await getDocs(collection(db, questiondb));
-        const questions = [];
-        querySnapshot.forEach((doc) => {
-            let questionData = doc.data();
-            questionData.id = doc.id;
-            questions.push(questionData);
+        const response = await fetch("http://localhost:3000/api/fetchQuiz", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ testId })
         });
-
-        shuffleQuestions(questions);
-        generateForm(questions);
+        
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.message || "Failed to fetch quiz.");
+        }
+        shuffleQuestions(data.questions);
+        generateForm(data.questions);
     } catch (error) {
         console.error("Error fetching questions:", error);
         alert("Failed to load questions. Please refresh.");
-    } finally {
+    }finally{
         loader.style.display = "none";
+        spinner.style.position = "none";
     }
 }
 
@@ -197,30 +228,9 @@ async function forceFullscreen() {
     }
 }
 
-    const startButton = document.getElementById("start-button");
-    startButton.addEventListener("click", async () => {
-        startButton.style.display = "none";
-        mcqSection.style.display = "block";
-        submitButton.style.display = "block";
-        timer = setInterval(updateTimer, 1000);
-        await forceFullscreen();
-        if (validStudent) {
-            fetchQuestions();
-        } else {
-            alert("Login is required to begin the test");
-            window.location.href = path1;
-        }
+    
 
-        document.addEventListener("fullscreenchange", () => {
-            if (!document.fullscreenElement && !isIOS()) {
-                submitTest();
-            }
-        });
-
-        violation();
-    });
-
-submitButton.addEventListener("click", () => {
+document.getElementById("submit-button").addEventListener("click", () => {
         sessionStorage.removeItem("violation"); 
         submitTest(); 
     });
