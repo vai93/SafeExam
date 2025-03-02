@@ -14,7 +14,7 @@ document.getElementById("quizForm").addEventListener("submit", async (e) => {
     const uniqueKey = document.getElementById("uniqueKey").value.trim();
     
     try {
-        const response = await fetch("http://localhost:3000/api/validation", {
+        const response = await fetch("api/validation", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ rollNumber, uniqueKey,testId })
