@@ -168,6 +168,18 @@ h1 {
     border-radius: 5px;
     box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.1);
 }
+@media (max-width: 768px) {
+    .question-image {
+        width: 80vw; /* Increase width for better visibility */
+    }
+}
+
+/* For very small screens (Phones under 480px) */
+@media (max-width: 480px) {
+    .question-image {
+        width: 90vw; /* Make it almost full width */
+    }
+}
 
 /* ✅ Style the options container */
 .options {
