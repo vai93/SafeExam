@@ -159,8 +159,10 @@ h1 {
 
 /* ✅ Style the question image */
 .question-image {
+    max-width: 100%;
+  height: auto;
     width: 50vw; /* Set a max width */
-    height: 50vh;
+/*     height: 50vh; */
     display: block;
     margin: 10px auto;
     border-radius: 5px;
