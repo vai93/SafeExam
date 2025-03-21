@@ -20,9 +20,12 @@ module.exports = async (req, res) => {
         }
 
         const now = new Date();
-        const formattedDate = `${now.getHours() < 10 ? "0" + now.getHours() : now.getHours()}:${now.getMinutes() < 10 ? "0" + now.getMinutes() : now.getMinutes()}_${now.getDate() < 10 ? "0" + now.getDate() : now.getDate()}-${ 
-            now.getMonth() + 1 < 10 ? "0" + (now.getMonth() + 1) : now.getMonth() + 1
-        }-${now.getFullYear().toString().slice(-2)}`;
+        const istOffset = 5.5 * 60 * 60 * 1000; // Convert hours to milliseconds
+        const istDate = new Date(now.getTime() + istOffset);
+
+        // Format IST timestamp as HH:MM_DD-MM-YY
+        const formattedDate = `${istDate.getHours().toString().padStart(2, "0")}:${istDate.getMinutes().toString().padStart(2, "0")}_${istDate.getDate().toString().padStart(2, "0")}-${(istDate.getMonth() + 1).toString().padStart(2, "0")}-${istDate.getFullYear().toString().slice(-2)}`;
+
 
         const customDocId = `${rollNumber}_${formattedDate}`;
 
