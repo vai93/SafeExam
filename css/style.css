@@ -170,7 +170,7 @@ h1 {
 @media (max-width: 768px) {
     .question-image {
         width: 80vw; /* Increase width for better visibility */
-         height: 50vh;
+        
     }
 }
 
@@ -178,7 +178,7 @@ h1 {
 @media (max-width: 480px) {
     .question-image {
         width: 90vw; /* Make it almost full width */
-         height: 50vh;
+  
     }
 }
 
