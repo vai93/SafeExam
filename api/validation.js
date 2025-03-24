@@ -1,6 +1,6 @@
 const { db } = require("../firebase-admin-setup");
 const admin = require("firebase-admin");
-
+const cookie = require("cookie");
 module.exports = async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "*");  // Allow all origins
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -40,7 +40,13 @@ module.exports = async (req, res) => {
         if (String(studentSnap.uniqueKey) !== String(uniqueKey)) {
             return res.status(401).json({ message: "Invalid unique key" });
         }
-
+        res.setHeader("Set-Cookie", cookie.serialize("validStudent", "true", {
+            httpOnly: true,  // Prevent JavaScript access
+            secure: true,  // Send only over HTTPS
+            sameSite: "Strict",  // Prevent CSRF
+            path: "/",  // Available across all routes
+            maxAge: 2 * 60 * 60  // Expire in 2 hours
+        }));
         return res.json({ success: true, name: studentSnap.name,rollNumber:studentSnap.rollNumber,testDuration:testData.testDuration,testTitle:testData.testTitle });
 
     } catch (error) {
