@@ -3,6 +3,7 @@ const admin = require("firebase-admin");
 const cookie = require("cookie");
 module.exports = async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "https://safe-exam.vercel.app/");  // Allow all origins
+    res.setHeader("Access-Control-Allow-Credentials", "true");
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     if (req.method === "OPTIONS") {
@@ -45,8 +46,8 @@ module.exports = async (req, res) => {
             secure: true,  // Send only over HTTPS
             sameSite: "Strict",  // Prevent CSRF
             path: "/",  // Available across all routes
-           // expires: new Date(0) 
-            maxAge: 2 * 60 * 60
+           expires: new Date(0) 
+            // maxAge: 2 * 60 * 60
         }));
         return res.json({ success: true, name: studentSnap.name,rollNumber:studentSnap.rollNumber,testDuration:testData.testDuration,testTitle:testData.testTitle });
 
