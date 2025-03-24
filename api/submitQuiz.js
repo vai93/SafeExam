@@ -14,6 +14,7 @@ module.exports = async (req, res) => {
 
 
     try {
+         const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
         const { rollNumber, testId, answers, violation, studentName } = req.body;
         if (!rollNumber || !testId || !answers) {
             return res.status(400).json({ message: "Missing required fields" });
@@ -54,6 +55,7 @@ module.exports = async (req, res) => {
             studentName,
             submittedAt: now.toISOString(),
             violation,
+            ip,
         });
 
         return res.json({ success: true, score });
