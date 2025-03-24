@@ -3,6 +3,7 @@ const admin = require("firebase-admin");
 const cookie = require("cookie");
 module.exports = async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "https://safe-exam.vercel.app/");  // Allow all origins
+    res.setHeader("Access-Control-Allow-Credentials", "true");
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     if (req.method === "OPTIONS") {
