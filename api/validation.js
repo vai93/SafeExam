@@ -45,7 +45,7 @@ module.exports = async (req, res) => {
             secure: true,  // Send only over HTTPS
             sameSite: "Strict",  // Prevent CSRF
             path: "/",  // Available across all routes
-            maxAge: 2 * 60 * 60  // Expire in 2 hours
+           expires: new Date(0) 
         }));
         return res.json({ success: true, name: studentSnap.name,rollNumber:studentSnap.rollNumber,testDuration:testData.testDuration,testTitle:testData.testTitle });
 
