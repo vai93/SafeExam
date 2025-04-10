@@ -31,12 +31,12 @@ module.exports = async (req, res) => {
             return res.status(401).json({ message: "Invalid unique key" });
         }
      res.setHeader("Set-Cookie", cookie.serialize("validStudent", "true", {
-    secure: true,
-    sameSite: "None",
-    path: "/",
-    maxAge: 60 * 60, // 1 hour
-}));
-
+            httpOnly: true,  // Prevent JavaScript access
+            secure: true,  // Send only over HTTPS
+            sameSite: "Strict",  // Prevent CSRF
+            path: "/",  // Available across all routes
+            expires: new Date(0)
+        }));
         
         return res.json({ success: true, name: studentSnap.name,rollNumber:studentSnap.rollNumber });
 
