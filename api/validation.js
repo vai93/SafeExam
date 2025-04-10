@@ -33,10 +33,11 @@ module.exports = async (req, res) => {
         res.setHeader("Set-Cookie", cookie.serialize("validStudent", "true", {
     httpOnly: true,
     secure: true,
-    sameSite: "Strict",
+    sameSite: none,
     path: "/",
     maxAge: 60 * 60 // 1 hour
 }));
+
         
         return res.json({ success: true, name: studentSnap.name,rollNumber:studentSnap.rollNumber });
 
