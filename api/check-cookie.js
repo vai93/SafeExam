@@ -1,14 +1,25 @@
 const { db } = require("../firebase-admin-setup");
 const admin = require("firebase-admin");
 const cookie = require("cookie");
+
 module.exports = async (req, res) => {
-     res.setHeader("Access-Control-Allow-Origin", "*");  // Allow all origins
+    // CORS headers (if needed)
+    res.setHeader("Access-Control-Allow-Origin", "*");  // Or restrict to your domain
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    const cookies = req.headers.cookie || "";
-    const validStudent = cookies.split("; ").find(c => c.startsWith("validStudent="))?.split("=")[1];
-    if (validStudent === "true") {
+
+    // Handle preflight OPTIONS request
+    if (req.method === "OPTIONS") {
+        return res.status(200).end();
+    }
+
+    // ✅ Use cookie package to parse
+    const cookies = cookie.parse(req.headers.cookie || "");
+    const validStudent = cookies.validStudent === "true";
+
+    if (validStudent) {
         return res.json({ valid: true });
     }
+
     return res.json({ valid: false });
 };
