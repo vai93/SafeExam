@@ -31,7 +31,6 @@ module.exports = async (req, res) => {
             return res.status(401).json({ message: "Invalid unique key" });
         }
      res.setHeader("Set-Cookie", cookie.serialize("validStudent", "true", {
-    httpOnly: true,
     secure: true,
     sameSite: "None",
     path: "/",
