@@ -30,12 +30,12 @@ module.exports = async (req, res) => {
         if (String(studentSnap.uniqueKey) !== String(uniqueKey)) {
             return res.status(401).json({ message: "Invalid unique key" });
         }
-        res.setHeader("Set-Cookie", cookie.serialize("validStudent", "true", {
+     res.setHeader("Set-Cookie", cookie.serialize("validStudent", "true", {
     httpOnly: true,
     secure: true,
-    sameSite: none,
+    sameSite: "None",
     path: "/",
-    maxAge: 60 * 60 // 1 hour
+    maxAge: 60 * 60, // 1 hour
 }));
 
         
