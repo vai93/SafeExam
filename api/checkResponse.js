@@ -27,7 +27,15 @@ module.exports = async (req, res) => {
                 responseFound = true;
             }
         });
-
+         const testSnap = await db.collection("TestDetails").doc(testId).get();
+        // console.log(testId);
+         if (!testSnap.exists) {
+             return res.status(404).json({ message: "Test not found" });
+         }
+        const testData = testSnap.data();
+        if (!testData.isActive) {
+            return res.status(403).json({ message: "Exam has not started yet." });
+        }
         return res.json({ success: true, responseFound });
     } catch (error) {
         console.error("Error checking response:", error);
