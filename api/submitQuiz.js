@@ -14,19 +14,19 @@ module.exports = async (req, res) => {
 
 
     try {
-         const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+        const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
         const { rollNumber, testId, answers, violation, studentName } = req.body;
         if (!rollNumber || !testId || !answers) {
             return res.status(400).json({ message: "Missing required fields" });
         }
 
-         const now = new Date();
+        const now = new Date();
 
-        // Convert to IST properly
-        const istDate = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+// Convert to IST properly
+const istDate = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
 
-        // Format IST timestamp as HH:MM:SS_DD-MM-YY
-        const formattedDate = `${istDate.getHours().toString().padStart(2, "0")}:${istDate.getMinutes().toString().padStart(2, "0")}:${istDate.getSeconds().toString().padStart(2, "0")}_${istDate.getDate().toString().padStart(2, "0")}-${(istDate.getMonth() + 1).toString().padStart(2, "0")}-${istDate.getFullYear().toString().slice(-2)}`;
+// Format IST timestamp as HH:MM:SS_DD-MM-YY
+const formattedDate = `${istDate.getHours().toString().padStart(2, "0")}:${istDate.getMinutes().toString().padStart(2, "0")}:${istDate.getSeconds().toString().padStart(2, "0")}_${istDate.getDate().toString().padStart(2, "0")}-${(istDate.getMonth() + 1).toString().padStart(2, "0")}-${istDate.getFullYear().toString().slice(-2)}`;
 
 
         const customDocId = `${rollNumber}_${formattedDate}`;
