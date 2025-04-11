@@ -15,7 +15,15 @@ module.exports = async (req, res) => {
         if (!testId) {
             return res.status(400).json({ message: "Missing test ID" });
         }
-
+         const testSnap = await db.collection("TestDetails").doc(testId).get();
+        // console.log(testId);
+         if (!testSnap.exists) {
+             return res.status(404).json({ message: "Test not found" });
+         }
+        const testData = testSnap.data();
+        if (!testData.isActive) {
+            return res.status(403).json({ message: "Exam has not started yet." });
+        }
         const questiondb = `${testId}Questions`;
         const querySnapshot = await db.collection(questiondb).get();
         const questions = [];
