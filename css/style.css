@@ -4,7 +4,11 @@ body {
     padding: 0;
     background-color: #f4f4f9;
 }
-
+body, * {
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
 #container {
     max-width: 800px;
     margin: 50px auto;
@@ -159,28 +163,29 @@ h1 {
 
 /* ✅ Style the question image */
 .question-image {
-     max-width: 100%;
-   width: 50vw; /* Set a max width */
-    height: auto;
-    display: block;
-    margin: 10px auto;
-    border-radius: 5px;
-    box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+  width: 50vw; /* Set a max width */
+   height: auto;
+   display: block;
+   margin: 10px auto;
+   border-radius: 5px;
+   box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.1);
 }
 @media (max-width: 768px) {
-    .question-image {
-        width: 80vw; /* Increase width for better visibility */
-        
-    }
+   .question-image {
+       width: 80vw; /* Increase width for better visibility */
+       
+   }
 }
 
 /* For very small screens (Phones under 480px) */
 @media (max-width: 480px) {
-    .question-image {
-        width: 90vw; /* Make it almost full width */
-  
-    }
+   .question-image {
+       width: 90vw; /* Make it almost full width */
+ 
+   }
 }
+
 
 /* ✅ Style the options container */
 .options {
