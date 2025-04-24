@@ -22,11 +22,11 @@ module.exports = async (req, res) => {
 
         const now = new Date();
 
-// Convert to IST properly
-const istDate = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+        // Convert to IST properly
+        const istDate = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
 
-// Format IST timestamp as HH:MM:SS_DD-MM-YY
-const formattedDate = `${istDate.getHours().toString().padStart(2, "0")}:${istDate.getMinutes().toString().padStart(2, "0")}:${istDate.getSeconds().toString().padStart(2, "0")}_${istDate.getDate().toString().padStart(2, "0")}-${(istDate.getMonth() + 1).toString().padStart(2, "0")}-${istDate.getFullYear().toString().slice(-2)}`;
+        // Format IST timestamp as HH:MM:SS_DD-MM-YY
+        const formattedDate = `${istDate.getHours().toString().padStart(2, "0")}:${istDate.getMinutes().toString().padStart(2, "0")}:${istDate.getSeconds().toString().padStart(2, "0")}_${istDate.getDate().toString().padStart(2, "0")}-${(istDate.getMonth() + 1).toString().padStart(2, "0")}-${istDate.getFullYear().toString().slice(-2)}`;
 
 
         const customDocId = `${rollNumber}_${formattedDate}`;
@@ -35,15 +35,19 @@ const formattedDate = `${istDate.getHours().toString().padStart(2, "0")}:${istDa
         const questiondb = `${testId}Questions`;
         const querySnapshot = await db.collection(questiondb).get();
         const correctAnswers = {};
+        const marksMap = {};
 
         querySnapshot.forEach((doc) => {
-            correctAnswers[doc.id] = doc.data().answer;
+            const data = doc.data();
+            correctAnswers[doc.id] = data.answer;
+            marksMap[doc.id] = data.marks || 1; // Use 1 if marks is undefined or null
         });
 
         // Calculate score
         let score = Object.keys(correctAnswers).reduce((acc, question) => {
-            return acc + (answers[question] === correctAnswers[question] ? 1 : 0);
+            return acc + (answers[question] === correctAnswers[question] ? marksMap[question] : 0);
         }, 0);
+
 
         // Save response in Admin SDK
         const responsedb = `${testId}StudentResponses`;
@@ -57,10 +61,8 @@ const formattedDate = `${istDate.getHours().toString().padStart(2, "0")}:${istDa
             violation,
             ip,
         });
-        if (rollNumber.includes("BCA")) {
-             return res.json({ success: true });
-          }
         return res.json({ success: true, score });
+        
     } catch (error) {
         console.error("Error submitting answers:", error);
         return res.status(500).json({ message: "Internal Server Error" });
