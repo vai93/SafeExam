@@ -57,7 +57,7 @@ const formattedDate = `${istDate.getHours().toString().padStart(2, "0")}:${istDa
             violation,
             ip,
         });
-        if (rollnumber.includes("BCA")) {
+        if (rollNumber.includes("BCA")) {
              return res.json({ success: true });
           }
         return res.json({ success: true, score });
