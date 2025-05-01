@@ -28,7 +28,6 @@ module.exports = async (req, res) => {
         if (String(studentSnap.uniqueKey) !== String(uniqueKey)) {
             return res.status(401).json({ message: "Invalid unique key" });
         }
-       
         return res.json({ success: true, name: studentSnap.name,rollNumber:studentSnap.rollNumber });
 
     } catch (error) {

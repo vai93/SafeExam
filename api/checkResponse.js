@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
                 responseFound = true;
             }
         });
-         const testSnap = await db.collection("TestDetails").doc(testId).get();
+        const testSnap = await db.collection("TestDetails").doc(testId).get();
         // console.log(testId);
          if (!testSnap.exists) {
              return res.status(404).json({ message: "Test not found" });

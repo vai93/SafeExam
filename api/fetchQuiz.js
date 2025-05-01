@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
         if (!testId) {
             return res.status(400).json({ message: "Missing test ID" });
         }
-         const testSnap = await db.collection("TestDetails").doc(testId).get();
+        const testSnap = await db.collection("TestDetails").doc(testId).get();
         // console.log(testId);
          if (!testSnap.exists) {
              return res.status(404).json({ message: "Test not found" });
